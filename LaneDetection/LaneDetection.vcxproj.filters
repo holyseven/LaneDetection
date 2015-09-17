@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\ELAS_VisualOdometry">
+      <UniqueIdentifier>{97e1bc81-ec72-4efa-88b5-f7e7e8171957}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IPMImage">
+      <UniqueIdentifier>{33edb01b-8144-4c2d-9fd7-481c3e8afa33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\KITTI_DATA_READER">
+      <UniqueIdentifier>{5631f483-8792-4c47-a2cd-0497aa5b5f3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LaneDetector">
+      <UniqueIdentifier>{4412cddc-f75c-4644-888f-6e9c2a6f4ed0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LSD1.5">
+      <UniqueIdentifier>{4357b0b9-71ab-4096-958e-36555a62191c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RectifyImages">
+      <UniqueIdentifier>{4bdc408f-ff8c-4add-9a83-31eacab66bba}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ELAS_VisualOdometry\descriptor.cpp">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ELAS_VisualOdometry\elas.cpp">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ELAS_VisualOdometry\ELAS_Disparity_Interface.cpp">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ELAS_VisualOdometry\filter.cpp">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ELAS_VisualOdometry\image.cpp">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ELAS_VisualOdometry\InterfaceProcessVISO.cpp">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ELAS_VisualOdometry\matcher.cpp">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ELAS_VisualOdometry\matrix.cpp">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ELAS_VisualOdometry\reconstruction.cpp">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ELAS_VisualOdometry\triangle.cpp">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ELAS_VisualOdometry\viso.cpp">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ELAS_VisualOdometry\viso_mono.cpp">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ELAS_VisualOdometry\viso_stereo.cpp">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IPMImage\GPSDataProcess.cpp">
+      <Filter>Source Files\IPMImage</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IPMImage\InversePerspectiveMapping.cpp">
+      <Filter>Source Files\IPMImage</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IPMImage\IPMImage.cpp">
+      <Filter>Source Files\IPMImage</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KITTI_Data_Reader\KITTI_Data_Reader.cpp">
+      <Filter>Source Files\KITTI_DATA_READER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LaneDetector\AlgoFilterLanes.cpp">
+      <Filter>Source Files\LaneDetector</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LaneDetector\Density_Clustering.cpp">
+      <Filter>Source Files\LaneDetector</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LaneDetector\LaneDetection.cpp">
+      <Filter>Source Files\LaneDetector</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LSD1.5\lsd.cpp">
+      <Filter>Source Files\LSD1.5</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RectifyImages\RectifyStereo.cpp">
+      <Filter>Source Files\RectifyImages</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ELAS_VisualOdometry\descriptor.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ELAS_VisualOdometry\elas.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ELAS_VisualOdometry\ELAS_Disparity_Interface.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ELAS_VisualOdometry\filter.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ELAS_VisualOdometry\image.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ELAS_VisualOdometry\InterfaceProcessVISO.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ELAS_VisualOdometry\matcher.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ELAS_VisualOdometry\matrix.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ELAS_VisualOdometry\reconstruction.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ELAS_VisualOdometry\timer.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ELAS_VisualOdometry\triangle.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ELAS_VisualOdometry\viso.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ELAS_VisualOdometry\viso_mono.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ELAS_VisualOdometry\viso_stereo.h">
+      <Filter>Source Files\ELAS_VisualOdometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IPMImage\InversePerspectiveMapping.h">
+      <Filter>Source Files\IPMImage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IPMImage\IPMImage.h">
+      <Filter>Source Files\IPMImage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KITTI_Data_Reader\KITTI_Data_Reader.h">
+      <Filter>Source Files\KITTI_DATA_READER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LaneDetector\Density_Clustering.h">
+      <Filter>Source Files\LaneDetector</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LaneDetector\LaneDetection.h">
+      <Filter>Source Files\LaneDetector</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LSD1.5\lsd.h">
+      <Filter>Source Files\LSD1.5</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RectifyImages\RectifyStereo.h">
+      <Filter>Source Files\RectifyImages</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

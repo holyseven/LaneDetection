@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+*.sdf
+
+\RUNDIR\
+\x64
+\include
+*.png

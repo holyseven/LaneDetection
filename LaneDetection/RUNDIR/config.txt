@@ -1,0 +1,31 @@
+C:\\201506-201511MFE\\KITTI_data\\2011_09_26\\2011_09_26_drive_0029_sync
+C:\\201506-201511MFE\\KITTI_data\\2011_09_26\\calib_cam_to_cam.txt
+1
+1
+1.65
+0
+0
+0
+1
+
+//1 DataSetFolderName
+//2 calibFileName
+//3 rectified : 1 -- have already rectified; 0 -- need rectify
+//4 frameInterval -- update ipm image every frameInterval frames.
+//5 h -- height of camera from road
+//6 methodeDisparity -- 0 : elas, 1 : sgbm, 2 : bm
+//7 noDisparity -- 0 : compute disparity map every frame
+//8 ELAS SETTING : 0 -- ROBOTICS, 1 -- MIDDLEBURY
+//9 showTimeConsuming : 0 -- do not check time consuming; 1 -- check each step's time consuming
+		
+		
+C:\\201506-201511MFE\\experiment_07_22\\2015_07_22_15_35_32\\data\\Flea3_Images
+C:\\201506-201511MFE\\test_code\\matlab_code\\stereoParams.txt
+
+C:\\201506-201511MFE\\KITTI_data\\2011_09_26\\2011_09_26_drive_0029_sync
+C:\\201506-201511MFE\\KITTI_data\\2011_09_26\\calib_cam_to_cam.txt
+
+Vous pouvez retrouver cette information en cliquant sur l'icône en forme de carnet d'adresse qui se trouve en haut à droite du nouveau site.
+il y a quelques secondes
+Felicien
+Il s'agit de la rubrique mes contacts.

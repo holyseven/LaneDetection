@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F94264CA-5558-4FFC-ABF8-9387AE192E89}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>LaneDetection</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="opencv300_vs2013_debug_x64.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="opencv300_vs2013_release_x64.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>./include/lpng1617;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>./include/lpng1617;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>./include/lpng1617;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ELAS_VisualOdometry\descriptor.cpp" />
+    <ClCompile Include="src\ELAS_VisualOdometry\elas.cpp" />
+    <ClCompile Include="src\ELAS_VisualOdometry\ELAS_Disparity_Interface.cpp" />
+    <ClCompile Include="src\ELAS_VisualOdometry\filter.cpp" />
+    <ClCompile Include="src\ELAS_VisualOdometry\image.cpp" />
+    <ClCompile Include="src\ELAS_VisualOdometry\InterfaceProcessVISO.cpp" />
+    <ClCompile Include="src\ELAS_VisualOdometry\matcher.cpp" />
+    <ClCompile Include="src\ELAS_VisualOdometry\matrix.cpp" />
+    <ClCompile Include="src\ELAS_VisualOdometry\reconstruction.cpp" />
+    <ClCompile Include="src\ELAS_VisualOdometry\triangle.cpp" />
+    <ClCompile Include="src\ELAS_VisualOdometry\viso.cpp" />
+    <ClCompile Include="src\ELAS_VisualOdometry\viso_mono.cpp" />
+    <ClCompile Include="src\ELAS_VisualOdometry\viso_stereo.cpp" />
+    <ClCompile Include="src\IPMImage\GPSDataProcess.cpp" />
+    <ClCompile Include="src\IPMImage\InversePerspectiveMapping.cpp" />
+    <ClCompile Include="src\IPMImage\IPMImage.cpp" />
+    <ClCompile Include="src\KITTI_Data_Reader\KITTI_Data_Reader.cpp" />
+    <ClCompile Include="src\LaneDetector\AlgoFilterLanes.cpp" />
+    <ClCompile Include="src\LaneDetector\Density_Clustering.cpp" />
+    <ClCompile Include="src\LaneDetector\LaneDetection.cpp" />
+    <ClCompile Include="src\LSD1.5\lsd.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\RectifyImages\RectifyStereo.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ELAS_VisualOdometry\descriptor.h" />
+    <ClInclude Include="src\ELAS_VisualOdometry\elas.h" />
+    <ClInclude Include="src\ELAS_VisualOdometry\ELAS_Disparity_Interface.h" />
+    <ClInclude Include="src\ELAS_VisualOdometry\filter.h" />
+    <ClInclude Include="src\ELAS_VisualOdometry\image.h" />
+    <ClInclude Include="src\ELAS_VisualOdometry\InterfaceProcessVISO.h" />
+    <ClInclude Include="src\ELAS_VisualOdometry\matcher.h" />
+    <ClInclude Include="src\ELAS_VisualOdometry\matrix.h" />
+    <ClInclude Include="src\ELAS_VisualOdometry\reconstruction.h" />
+    <ClInclude Include="src\ELAS_VisualOdometry\timer.h" />
+    <ClInclude Include="src\ELAS_VisualOdometry\triangle.h" />
+    <ClInclude Include="src\ELAS_VisualOdometry\viso.h" />
+    <ClInclude Include="src\ELAS_VisualOdometry\viso_mono.h" />
+    <ClInclude Include="src\ELAS_VisualOdometry\viso_stereo.h" />
+    <ClInclude Include="src\IPMImage\InversePerspectiveMapping.h" />
+    <ClInclude Include="src\IPMImage\IPMImage.h" />
+    <ClInclude Include="src\KITTI_Data_Reader\KITTI_Data_Reader.h" />
+    <ClInclude Include="src\LaneDetector\Density_Clustering.h" />
+    <ClInclude Include="src\LaneDetector\LaneDetection.h" />
+    <ClInclude Include="src\LSD1.5\lsd.h" />
+    <ClInclude Include="src\RectifyImages\RectifyStereo.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
