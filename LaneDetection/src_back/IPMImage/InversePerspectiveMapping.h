@@ -3,7 +3,6 @@
 
 #include <opencv2\opencv.hpp>
 #include <string>
-#include "../ConverterCoordinates/CC.h"
 using namespace cv;
 using namespace std;
 
@@ -62,7 +61,7 @@ public:
 	Point2d remapImg2World(double u, double v);
 
 
-	CC::CC_SimpleIPM simpleIPM;
+
 	double *remapX, *remapZ;
 	int image_rows, image_cols;
 

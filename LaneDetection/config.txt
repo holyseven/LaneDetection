@@ -1,8 +1,8 @@
-C:\\201506-201511MFE\\experiment_07_22\\2015_07_22_15_35_32\\data\\Flea3_Images
-C:\\201506-201511MFE\\test_code\\matlab_code\\stereoParams.txt
-0
+C:\\201506-201511MFE\\KITTI_data\\2011_09_26\\2011_09_26_drive_0029_sync
+C:\\201506-201511MFE\\KITTI_data\\2011_09_26\\calib_cam_to_cam.txt
 1
-1.4
+1
+1.65
 0
 1
 0
@@ -27,7 +27,3 @@ C:\\201506-201511MFE\\test_code\\matlab_code\\stereoParams.txt
 C:\\201506-201511MFE\\KITTI_data\\2011_09_26\\2011_09_26_drive_0029_sync
 C:\\201506-201511MFE\\KITTI_data\\2011_09_26\\calib_cam_to_cam.txt
 1
-
-C:\\201506-201511MFE\\experiment_07_22\\2015_07_22_15_16_58\\data\\Flea3_Images
-C:\\201506-201511MFE\\test_code\\matlab_code\\stereoParams.txt
-0

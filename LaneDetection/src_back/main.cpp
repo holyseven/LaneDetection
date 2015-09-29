@@ -6,14 +6,14 @@
 #include "ELAS_VisualOdometry\image.h"
 #include "ELAS_VisualOdometry\ELAS_Disparity_Interface.h"
 #include "IPMImage\IPMImage.h"
-#include "LaneDetector\LaneDetectionV2.h"
+#include "LaneDetector\LaneDetection.h"
 
 #include <iostream>
 using namespace std;
 
 void parse(string &DataSetFolderName, string &calibFileName, int &rectified,
 	int &frameInterval, float &h, int &methodeDisparity, int &noDisparity,
-	int &elasSetting, int &showTimeConsuming, float &pitch)
+	int &elasSetting, int &showTimeConsuming)
 {
 	ifstream in("config.txt");
 	if (!in.is_open())
@@ -30,7 +30,6 @@ void parse(string &DataSetFolderName, string &calibFileName, int &rectified,
 	in >> noDisparity;//0:computes disparity map every frame
 	in >> elasSetting;
 	in >> showTimeConsuming;
-	in >> pitch;
 	in.close();
 }
 
@@ -51,11 +50,10 @@ int main2(){
 	int noDisparity = 0;
 	int elasSetting = Elas::ROBOTICS;
 	int showTimeConsuming = 0;
-	float pitch = 0;
 
 	//read config.txt to settings:
 	parse(DataSetFolderName, calibFileName, rectified, frameInterval, h, 
-		methodeDisparity, noDisparity, elasSetting, showTimeConsuming, pitch);
+		methodeDisparity, noDisparity, elasSetting, showTimeConsuming);
 	cout << "reading config.txt" << endl;
 
 	KITTI_Data_Reader reader(DataSetFolderName);
@@ -229,8 +227,8 @@ int main2(){
 		//LaneDetection lsd(ipmImage, ipmMask);
 		//lsd.run(3, 1);
 
-		//LaneDetection lsd_(rL, calibData.K_00[2], calibData.K_00[5]);
-		//lsd_.run(3, 2);
+		LaneDetection lsd_(rL, calibData.K_00[2], calibData.K_00[5]);
+		lsd_.run(3, 2);
 
 		if (showTimeConsuming)
 		{
@@ -279,11 +277,10 @@ int main() {
 	int noDisparity = 1;
 	int elasSetting = Elas::ROBOTICS;
 	int showTimeConsuming = 0;
-	float pitch = 0;
 
 	//read config.txt to settings:
 	parse(DataSetFolderName, calibFileName, rectified, frameInterval, h,
-		methodeDisparity, noDisparity, elasSetting, showTimeConsuming, pitch);
+		methodeDisparity, noDisparity, elasSetting, showTimeConsuming);
 	cout << "reading config.txt" << endl;
 
 
@@ -299,21 +296,17 @@ int main() {
 
 	Calib_Data_Type calibData = rectifyStereo.calibData;
 
-	CC::CC_SimpleIPM ipm;
-	ipm.createModel(calibData.P_rect_00[0], calibData.P_rect_00[5], calibData.P_rect_00[2], calibData.P_rect_00[6], 
-		pitch, h);
+	string left_img_file_name = reader.curImageFileName[0];
+	string right_img_file_name = reader.curImageFileName[1];
+
+	InterfaceProcessIPMImage *interface_ipm = new InterfaceProcessIPMImage(calibData, h, 0);//initialize pitch angle with disparity map
+	interface_ipm->showVehiclePosition(false, true);
+	interface_ipm->ipm->updateFrameUsingStandardAssumption(Mat::eye(4, 4, CV_64FC1));
 
 	int frameNum = 0;
 	Mat ipmImage;
 	int64 t0, t1;
 
-	reader.jumpToIndex(0);
-
-	Mat _ = imread(reader.curImageFileName[0]);
-	LaneDetection *lsd_ = new LaneDetection(_);
-	lsd_->init(0, &ipm);
-	
-	
 	while (reader.generateNextDataFileName())
 	{
 		if (showTimeConsuming)
@@ -338,8 +331,8 @@ int main() {
 			cout << "Reading images and rectifying images : " << (t1 - t0) / getTickFrequency() * 1000 << " ms. " << endl;
 		}
 
-		//lsd_->method2(rL);
-		lsd_->method3(rL);
+		LaneDetection lsd_(rL, calibData.K_00[2], calibData.K_00[5]);
+		lsd_.run(4, 3, interface_ipm->ipm);
 
 		if (showTimeConsuming)
 		{
@@ -348,8 +341,7 @@ int main() {
 		}
 
 		imshow("rL",rL);
-		if (waitKey(10) > 0)
-			waitKey();
+		waitKey();
 	}
-	cout << "-------------------end------------------ " << endl;
+
 }

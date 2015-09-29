@@ -126,11 +126,6 @@ public:
 	string curVelodyneFileName;
 	void setMaxIndex(int n) { maxIndex = n; }
 	int getMaxIndex() { return maxIndex; }
-	void jumpToIndex(int _dataIndex) 
-	{ 
-		dataIndex = _dataIndex; 
-		generateNextDataFileName(_dataIndex - 1);
-	}
 private:
 	void generateDataDirs();
 	int getMaxIndexFromTimeStamps();

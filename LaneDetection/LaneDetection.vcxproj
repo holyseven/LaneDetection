@@ -165,9 +165,8 @@
     <ClCompile Include="src\IPMImage\InversePerspectiveMapping.cpp" />
     <ClCompile Include="src\IPMImage\IPMImage.cpp" />
     <ClCompile Include="src\KITTI_Data_Reader\KITTI_Data_Reader.cpp" />
-    <ClCompile Include="src\LaneDetector\AlgoFilterLanes.cpp" />
-    <ClCompile Include="src\LaneDetector\Density_Clustering.cpp" />
-    <ClCompile Include="src\LaneDetector\LaneDetection.cpp" />
+    <ClCompile Include="src\LaneDetector\EKF.cpp" />
+    <ClCompile Include="src\LaneDetector\LaneDetectionV2.cpp" />
     <ClCompile Include="src\LSD1.5\lsd.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\RectifyImages\RectifyStereo.cpp" />
@@ -190,8 +189,8 @@
     <ClInclude Include="src\IPMImage\InversePerspectiveMapping.h" />
     <ClInclude Include="src\IPMImage\IPMImage.h" />
     <ClInclude Include="src\KITTI_Data_Reader\KITTI_Data_Reader.h" />
-    <ClInclude Include="src\LaneDetector\Density_Clustering.h" />
-    <ClInclude Include="src\LaneDetector\LaneDetection.h" />
+    <ClInclude Include="src\LaneDetector\EKF.h" />
+    <ClInclude Include="src\LaneDetector\LaneDetectionV2.h" />
     <ClInclude Include="src\LSD1.5\lsd.h" />
     <ClInclude Include="src\RectifyImages\RectifyStereo.h" />
   </ItemGroup>

@@ -106,9 +106,6 @@ void InversePerspectiveMapping::createModelForStandardAssumption(double fx, doub
 
 	//InversePerspectiveMapping::StandardAssumption
 	firstFrameParam.setRTMat(rx, 0, 0, 0, h * cos(rx), h * sin(rx));
-
-
-	//simpleIPM.createModel(fx, fy, cu, cv, rx, h);
 }
 
 void InversePerspectiveMapping::createModelForStandardAssumption(double fx, double fy, double cu, double cv, double h,
@@ -119,7 +116,6 @@ void InversePerspectiveMapping::createModelForStandardAssumption(double fx, doub
 	double rx = estimateRx(cv, fx, disp);
 	cout << "estimate pitch angle from disparity map : " << rx << endl;
 	createModelForStandardAssumption(fx, fy, cu, cv, h, rx);
-	
 }
 
 InversePerspectiveMapping::~InversePerspectiveMapping(){
@@ -179,14 +175,7 @@ Point2d InversePerspectiveMapping::remapImg2World(double u, double v) {
 	c5 = c5 / c1;
 	c6 = c6 / c1;
 
-	//double dstx, dstz;
-	//simpleIPM.convert(u, v, dstx, dstz);
-
 	double z = (c3 - c6*c2) / (c4 - c5*c2);
-
-	//cout << "simpleIPM : " << dstx << ", " << dstz << endl;
-	//cout << "......IPM : " << (c6 - c5*z) << ", " << z << endl;
-
 	return Point2d((c6 - c5*z), z);
 }
 

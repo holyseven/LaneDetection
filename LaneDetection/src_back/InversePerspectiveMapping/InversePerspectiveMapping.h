@@ -3,7 +3,6 @@
 
 #include <opencv2\opencv.hpp>
 #include <string>
-#include "../ConverterCoordinates/CC.h"
 using namespace cv;
 using namespace std;
 
@@ -58,11 +57,6 @@ public:
 	
 	static inline void rotation2D(const Mat& rMat, Mat &p) { p = rMat * p; };
 
-	//remap from a point in image to camera coordinates system.
-	Point2d remapImg2World(double u, double v);
-
-
-	CC::CC_SimpleIPM simpleIPM;
 	double *remapX, *remapZ;
 	int image_rows, image_cols;
 

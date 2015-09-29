@@ -84,15 +84,6 @@
     <ClCompile Include="src\KITTI_Data_Reader\KITTI_Data_Reader.cpp">
       <Filter>Source Files\KITTI_DATA_READER</Filter>
     </ClCompile>
-    <ClCompile Include="src\LaneDetector\AlgoFilterLanes.cpp">
-      <Filter>Source Files\LaneDetector</Filter>
-    </ClCompile>
-    <ClCompile Include="src\LaneDetector\Density_Clustering.cpp">
-      <Filter>Source Files\LaneDetector</Filter>
-    </ClCompile>
-    <ClCompile Include="src\LaneDetector\LaneDetection.cpp">
-      <Filter>Source Files\LaneDetector</Filter>
-    </ClCompile>
     <ClCompile Include="src\LSD1.5\lsd.cpp">
       <Filter>Source Files\LSD1.5</Filter>
     </ClCompile>
@@ -101,6 +92,12 @@
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LaneDetector\LaneDetectionV2.cpp">
+      <Filter>Source Files\LaneDetector</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LaneDetector\EKF.cpp">
+      <Filter>Source Files\LaneDetector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,17 +152,17 @@
     <ClInclude Include="src\KITTI_Data_Reader\KITTI_Data_Reader.h">
       <Filter>Source Files\KITTI_DATA_READER</Filter>
     </ClInclude>
-    <ClInclude Include="src\LaneDetector\Density_Clustering.h">
-      <Filter>Source Files\LaneDetector</Filter>
-    </ClInclude>
-    <ClInclude Include="src\LaneDetector\LaneDetection.h">
-      <Filter>Source Files\LaneDetector</Filter>
-    </ClInclude>
     <ClInclude Include="src\LSD1.5\lsd.h">
       <Filter>Source Files\LSD1.5</Filter>
     </ClInclude>
     <ClInclude Include="src\RectifyImages\RectifyStereo.h">
       <Filter>Source Files\RectifyImages</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LaneDetector\LaneDetectionV2.h">
+      <Filter>Source Files\LaneDetector</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LaneDetector\EKF.h">
+      <Filter>Source Files\LaneDetector</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
