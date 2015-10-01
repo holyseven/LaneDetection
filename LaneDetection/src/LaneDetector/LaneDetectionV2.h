@@ -29,7 +29,12 @@ public:
 	}
 
 	bool isNeighbor(Segment2d s);
-	bool isNeighbor(Point2d s);
+	bool isNeighbor(Point2d s, double distMax = 20);
+
+	//s = Point2d(0, 0). seg is this.
+	bool isInView(double x_min = -20, double x_max = 15, double z_min = -2, double z_max = 80);
+
+	bool isClose(Point2d s);
 	Point2d intersec(Segment2d *s);
 
 	bool maybePair(Segment2d *s);
@@ -43,6 +48,12 @@ private:
 	void computeSlope();
 	void computeLength();
 	int _scale;
+};
+
+struct MyMarking{
+	Segment2d seg;
+	double width;
+	int type;
 };
 
 class Pair2d {
@@ -93,6 +104,12 @@ private:
 class LaneDetection
 {
 public:
+	struct Param{
+		double slope_dif;//
+		double rect_dist_max, rect_dist_min;
+		double color_dif;
+	} ;
+
 	//LaneDetection();
 	LaneDetection(const Mat &img = Mat());
 
@@ -108,13 +125,15 @@ public:
 	//step2 : update ipm (estimate rx)
 	//work on ipm and kf
 	void updateIPM(std::vector<Pair2d> pairs, std::vector<Pair2d> pairs_in_image);
-	void updateIPM2(std::vector<Pair2d> pairs, std::vector<Pair2d> pairs_in_image);
+	void updateIPM2(std::vector<Pair2d> pairs_in_image);
+
+	void findPairs(std::vector<Pair2d> &pairs, std::vector<Pair2d> &pairs_in_image);
 
 	void detectionLineLSD(Mat &processImage);
 
 	void method1();
 	void method2(const Mat &img);
-	void method3(const Mat &img);
+	std::vector<Pair2d> method3(const Mat &img);
 
 	//double estimateRx(std::vector<Segment2d> *segments_in_image);
 
@@ -128,6 +147,9 @@ public:
 	EKalmanFilter ekf;
 	Point2d vp;//vanishing point
 	double vpy;
+
+	const int x_min = -20, x_max = 15;//x_min = -20, x_max = 15
+	const int z_min = 6, z_max = 80;//z_min = 6, z_max = 80
 
 private:
 	ntuple_list lsd_result;

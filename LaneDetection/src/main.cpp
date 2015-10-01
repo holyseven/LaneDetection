@@ -307,7 +307,7 @@ int main() {
 	Mat ipmImage;
 	int64 t0, t1;
 
-	reader.jumpToIndex(0);
+	reader.jumpToIndex(25);
 
 	Mat _ = imread(reader.curImageFileName[0]);
 	LaneDetection *lsd_ = new LaneDetection(_);
