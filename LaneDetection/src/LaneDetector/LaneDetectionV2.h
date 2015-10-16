@@ -28,6 +28,8 @@ public:
 		return length;
 	}
 
+	double computeDistance(Point2d p);
+
 	bool isNeighbor(Segment2d s);
 	bool isNeighbor(Point2d s, double distMax = 20);
 
@@ -54,6 +56,8 @@ struct MyMarking{
 	Segment2d seg;
 	double width;
 	int type;
+	int index_in_lanes;
+	int index_in_a_lane;
 };
 
 class Pair2d {
@@ -127,13 +131,16 @@ public:
 	void updateIPM(std::vector<Pair2d> pairs, std::vector<Pair2d> pairs_in_image);
 	void updateIPM2(std::vector<Pair2d> pairs_in_image);
 
-	void findPairs(std::vector<Pair2d> &pairs, std::vector<Pair2d> &pairs_in_image);
+	void findPairs(std::vector<Pair2d> &pairs, std::vector<Pair2d> &pairs_in_image, const Mat &maskRoad = Mat());
 
 	void detectionLineLSD(Mat &processImage);
 
 	void method1();
 	void method2(const Mat &img);
-	std::vector<Pair2d> method3(const Mat &img);
+	std::vector<Pair2d> method3(const Mat &img, int winFlag = 0, const Mat &maskRoad = Mat());
+	std::vector<Pair2d> method4(const Mat &rL, const Mat &disp, int winFlag = 0);//stereo
+
+	void segmentationRoad(Mat &maskRoad);
 
 	//double estimateRx(std::vector<Segment2d> *segments_in_image);
 
@@ -148,9 +155,10 @@ public:
 	Point2d vp;//vanishing point
 	double vpy;
 
-	const int x_min = -20, x_max = 15;//x_min = -20, x_max = 15
-	const int z_min = 6, z_max = 80;//z_min = 6, z_max = 80
+	const int x_min = -10, x_max = 15;//x_min = -20, x_max = 15
+	const int z_min = 6, z_max = 50;//z_min = 6, z_max = 80
 
 private:
 	ntuple_list lsd_result;
+	Vec3b roadColor;
 };
