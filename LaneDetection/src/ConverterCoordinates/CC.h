@@ -1,5 +1,13 @@
 #pragma once
+
 #include <math.h>
+
+#if _MSC_VER == 1700
+inline double atanh(double x) 
+{
+	return (log(1+x) - log(1-x))/2;
+}
+#endif
 
 #define CC_PI 3.1415926535897932384626433832795
 /*

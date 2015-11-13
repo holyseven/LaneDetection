@@ -10,7 +10,7 @@ using namespace cv;
 
 #define half_pi CV_PI / 2
 
-class Segment2d
+class Segment2d // p1.y < p2.y
 {
 public:
 	Point2d p1;
@@ -131,16 +131,18 @@ public:
 	void updateIPM(std::vector<Pair2d> pairs, std::vector<Pair2d> pairs_in_image);
 	void updateIPM2(std::vector<Pair2d> pairs_in_image);
 
-	void findPairs(std::vector<Pair2d> &pairs, std::vector<Pair2d> &pairs_in_image, const Mat &maskRoad = Mat());
+	void findPairs(std::vector<Pair2d> &pairs, std::vector<Pair2d> &pairs_in_image, const Mat &maskRoad = Mat(), int times = 0);
+	void checkPairs(std::vector<Pair2d> &pairs, std::vector<Pair2d> &pairs_in_image);
 
 	void detectionLineLSD(Mat &processImage);
 
 	void method1();
 	void method2(const Mat &img);
-	std::vector<Pair2d> method3(const Mat &img, int winFlag = 0, const Mat &maskRoad = Mat());
+	std::vector < std::vector<Pair2d> > method3(const Mat &img, int winFlag = 0, const Mat &maskRoad = Mat());
 	std::vector<Pair2d> method4(const Mat &rL, const Mat &disp, int winFlag = 0);//stereo
 
 	void segmentationRoad(Mat &maskRoad);
+	void roadExtraFromDisp(const Mat &disp, Mat &maskRoad);
 
 	//double estimateRx(std::vector<Segment2d> *segments_in_image);
 
@@ -155,8 +157,8 @@ public:
 	Point2d vp;//vanishing point
 	double vpy;
 
-	const int x_min = -10, x_max = 15;//x_min = -20, x_max = 15
-	const int z_min = 6, z_max = 50;//z_min = 6, z_max = 80
+	static const int x_min = -10, x_max = 15;//x_min = -20, x_max = 15
+	static const int z_min = 6, z_max = 80;//z_min = 6, z_max = 80
 
 private:
 	ntuple_list lsd_result;

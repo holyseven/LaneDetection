@@ -43,14 +43,14 @@ string generateFileNameFormat(int _index)
 	return s;
 }
 
-int getImagesNum(string path)
+int getImagesNum(string path, string formatImage)
 {
 	const int MAX_NUM = 10000;
 	int num = 0;
 	for (int i = 0; i < MAX_NUM; i++)
 	{
 		string s = generateFileNameFormat(i);
-		s = path + "\\" + s + ".png";
+		s = path + "\\" + s + formatImage;
 		ifstream fileStream(s);
 		if (!fileStream.is_open())
 		{
@@ -65,15 +65,17 @@ int getImagesNum(string path)
 
 KITTI_Data_Reader::KITTI_Data_Reader(){
 	baseDir = "";
+	formatImage = ".png";
 }
 
-KITTI_Data_Reader::KITTI_Data_Reader(string _baseDir){
+KITTI_Data_Reader::KITTI_Data_Reader(string _baseDir, string _formatImage){
 	baseDir = _baseDir;
 	dataIndex = 0;
 	generateDataDirs();
 	maxIndex = getMaxIndexFromTimeStamps();
+	formatImage = _formatImage;
 	if (maxIndex < 0)
-		maxIndex = getImagesNum(imageDirs[0] + "data");
+		maxIndex = getImagesNum(imageDirs[0] + "data", formatImage);
 }
 
 int KITTI_Data_Reader::getMaxIndexFromTimeStamps(){
@@ -109,7 +111,7 @@ bool KITTI_Data_Reader::generateNextDataFileName(int _index){
 
 	string fileName = generateFileNameFormat(_index);
 	for (int i = 0; i < 4; i++)
-		curImageFileName[i] = imageDirs[i] + "data\\" + fileName + ".png";
+		curImageFileName[i] = imageDirs[i] + "data\\" + fileName + formatImage;
 
 	curOxtsFileName = oxtsDir + "data\\" + fileName + ".txt";
 	curVelodyneFileName = velodyneDir + "data\\" + fileName + ".bin";

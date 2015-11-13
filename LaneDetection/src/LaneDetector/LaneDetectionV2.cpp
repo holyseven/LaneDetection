@@ -14,10 +14,10 @@ ofstream fout_2;
 #endif
 
 inline double kernel(Point2d x) {
-	return exp2(-x.ddot(x)/100);
+	return exp(-x.ddot(x)/100);
 }
 inline double kernel(double x){
-	return exp2(-x*x / 10);
+	return exp(-x*x / 10);
 }
 
 //(p1-p2)*(p1-p2)
@@ -180,14 +180,26 @@ bool Segment2d::isInView(double x_min, double x_max, double z_min, double z_max)
 bool Segment2d::maybePair(Segment2d *seg)
 {
 	if (seg->p1.y < 0)
+	{
+#ifdef DEBUG_FOUT
+		fout_2 << "seg->p1.y < 0 " << endl;
+#endif
 		return false;
+	}
+		
 	if (seg->getLength() > this->getLength())
 	{
+#ifdef DEBUG_FOUT
+		fout_2 << "seg->getLength() > this->getLength() " << endl;
+#endif
 		return false;
 	}
 	//simple check, no great computation
 	if (!this->isNeighbor(*seg))
 	{
+#ifdef DEBUG_FOUT
+		fout_2 << "!this->isNeighbor(*seg) " << endl;
+#endif
 		return false;
 	}
 
@@ -228,7 +240,9 @@ vector<Segment2d> Segment2d::getValidRect(Segment2d s)
 	//possible to improve
 	if (s.p1.y > foot_12.p2.y || s.p2.y < foot_12.p1.y)
 	{
-
+#ifdef DEBUG_FOUT
+		fout_2 << "s.p1.y > foot_12.p2.y || s.p2.y < foot_12.p1.y " << " continue in v.empty()" << endl;
+#endif
 		return vec;
 	}
 
@@ -262,6 +276,9 @@ vector<Segment2d> Segment2d::getValidRect(Segment2d s)
 	Segment2d valid_foot_12(arry[1], arry[2]);
 	if (valid_foot_12.getLength() < s.getLength() * 0.1)
 	{
+#ifdef DEBUG_FOUT
+		fout_2 << "valid_foot_12.getLength() < s.getLength() * 0.1 " << " continue in v.empty()" << endl;
+#endif
 		return vec;//empty
 	}
 
@@ -275,11 +292,20 @@ vector<Segment2d> Segment2d::getValidRect(Segment2d s)
 	double thresh = 0.7;
 	if (dist_p2p(new_p1, valid_foot_12.p1) > thresh && dist_p2p(new_p2, valid_foot_12.p2) > thresh)
 	{
+#ifdef DEBUG_FOUT
+		fout_2 << "dist_p2p(new_p1, valid_foot_12.p1) > thresh && dist_p2p(new_p2, valid_foot_12.p2) > thresh " << " continue in v.empty()" << endl;
+#endif
 		return vec;
 	}
-	thresh = 0.1;
+	thresh = 0.08;
 	if (dist_p2p(new_p1, valid_foot_12.p1) < thresh || dist_p2p(new_p2, valid_foot_12.p2) < thresh)
 	{
+#ifdef DEBUG_FOUT
+		fout_2 << "dist_p2p(new_p1, valid_foot_12.p1) < thresh || dist_p2p(new_p2, valid_foot_12.p2) < thresh " << " continue in v.empty()" << endl;
+		fout_2 << "dist_p2p(new_p1, valid_foot_12.p1) and dist_p2p(new_p2, valid_foot_12.p2) " 
+			<< dist_p2p(new_p1, valid_foot_12.p1) << ", "
+			<< dist_p2p(new_p2, valid_foot_12.p2) << endl;
+#endif
 		return vec;
 	}
 
@@ -466,7 +492,7 @@ ntuple_list LaneDetection::resultLSD() {
 
 	lsd_result = lsd(image);
 
-#ifdef DEBUG_FOUT
+#ifdef DEBUG_drawImage
 	Mat colorImage;
 	rawColorImage.copyTo(colorImage);
 	/*draw the lines*/
@@ -996,8 +1022,11 @@ void LaneDetection::method2(const Mat &img)
 }
 
 
-void LaneDetection::findPairs(vector<Pair2d> &pairs, vector<Pair2d> &pairs_in_image, const Mat &maskRoad)
+void LaneDetection::findPairs(vector<Pair2d> &pairs, vector<Pair2d> &pairs_in_image, const Mat &maskRoad, int times)
 {
+	pairs.clear();
+	pairs_in_image.clear();
+
 	//select segments in this zone
 	//int x_min = -20, x_max = 15;
 	//int z_min = 6, z_max = 80;
@@ -1050,19 +1079,38 @@ void LaneDetection::findPairs(vector<Pair2d> &pairs, vector<Pair2d> &pairs_in_im
 #endif
 
 	vector<double> slopes;
+	
 
 	//step 3 : find pairs
-	pairs.clear();
-	pairs_in_image.clear();
 	int n_segments = segments.size();
+	int **pair_relation = new int*[n_segments];//index of pair of ith segment and jth segment. If they are not, it's -1.
+	for (int i = 0; i < n_segments; i++)
+	{
+		pair_relation[i] = new int[n_segments];
+		for (int j = 0; j < n_segments; j++)
+		{
+			pair_relation[i][j] = -1;
+		}
+	}
+
+
 	int width = 1;
 	for (int i = 0; i < n_segments; i++)
 	{
 		Segment2d *p12 = &segments[i];//p1.y < p2.y
 		if (p12->p1.y < 0)
+		{
+#ifdef DEBUG_FOUT
+			fout_2 << "p12->p1.y < 0  " << endl;
+			fout_2 << i << "," << endl;
+#endif
 			continue;
+		}
+			
 
 		Segment2d *p12_img = &segments_in_image[i];
+
+		int num_group_p12 = 0;
 		for (int j = 0; j < n_segments; j++)
 		{
 			if (j == i) continue;
@@ -1086,7 +1134,10 @@ void LaneDetection::findPairs(vector<Pair2d> &pairs, vector<Pair2d> &pairs_in_im
 			//valid?
 			if (entire_v.empty())
 			{
-				//fout_2 << i << ", " << j << "continue in v.empty()" << endl;
+#ifdef DEBUG_FOUT
+				fout_2 << i << ", " << j << "continue in v.empty()"  << endl;
+				fout_2 << i << "," << j << "[" << p12_img->p1 << "," << p12_img->p2 << "] and [" << seg_img->p1 << "," << seg_img->p2 << endl;
+#endif
 				continue;
 			}
 			double d1 = dist_p2p(entire_v[0].p1, entire_v[1].p1);
@@ -1130,28 +1181,43 @@ void LaneDetection::findPairs(vector<Pair2d> &pairs, vector<Pair2d> &pairs_in_im
 			for (int _trans = 0; _trans < 3; _trans++)
 			{
 				Point2d trans = translation[_trans];
-				Point2d dst_p[4];
-				for (int n = 0; n < 4; n++)
-				{
-					ipm->convert_inv(src_p[n].x + trans.x, src_p[n].y + trans.y, dst_p[n].x, dst_p[n].y);
-				}
+				//Point2d dst_p[4];
+				//for (int n = 0; n < 4; n++)
+				//{
+				//	ipm->convert_inv(src_p[n].x + trans.x, src_p[n].y + trans.y, dst_p[n].x, dst_p[n].y);
+				//}
 
 				Point2d center = (src_p[0] + src_p[1] + src_p[2] + src_p[3]) / 4;
-				Point2d dst_center;
-				ipm->convert_inv(center.x + trans.x, center.y + trans.y, dst_center.x, dst_center.y);
+				Point2d _p_dst;
+				ipm->convert_inv(center.x + trans.x, center.y + trans.y, _p_dst.x, _p_dst.y);
+				if (_p_dst.y < 0 || _p_dst.y > rawColorImage.rows - 1)
+					continue;
+				if (_p_dst.x < 0 || _p_dst.x > rawColorImage.cols - 1)
+					continue;
+				vec_color[_trans].push_back(rawColorImage.at<Vec3b>(_p_dst.y, _p_dst.x));
 
-				int cen_x = dst_center.x, cen_y = dst_center.y;
-				for (int cen_x_i = -1; cen_x_i < 2; cen_x_i++)
+				for (int n = 0; n < 4; n++)
 				{
-					for (int cen_y_i = -1; cen_y_i < 2; cen_y_i++)
-					{
-						if (cen_y + cen_y_i < 0 || cen_y + cen_y_i > rawColorImage.rows - 1)
-							continue;
-						if (cen_x + cen_x_i < 0 || cen_x + cen_x_i > rawColorImage.cols - 1)
-							continue;
-						vec_color[_trans].push_back(rawColorImage.at<Vec3b>(cen_y + cen_y_i, cen_x + cen_x_i));
-					}
+					Point2d _p_sample = (center + src_p[n]) / 2 + trans;
+					ipm->convert_inv(_p_sample.x, _p_sample.y, _p_dst.x, _p_dst.y);
+					if (_p_dst.y < 0 || _p_dst.y > rawColorImage.rows - 1)
+						continue;
+					if (_p_dst.x < 0 || _p_dst.x > rawColorImage.cols - 1)
+						continue;
+					vec_color[_trans].push_back(rawColorImage.at<Vec3b>(_p_dst.y, _p_dst.x));
 				}
+
+				//for (int cen_x_i = -1; cen_x_i < 2; cen_x_i++)
+				//{
+				//	for (int cen_y_i = -1; cen_y_i < 2; cen_y_i++)
+				//	{
+				//		if (cen_y + cen_y_i < 0 || cen_y + cen_y_i > rawColorImage.rows - 1)
+				//			continue;
+				//		if (cen_x + cen_x_i < 0 || cen_x + cen_x_i > rawColorImage.cols - 1)
+				//			continue;
+				//		vec_color[_trans].push_back(rawColorImage.at<Vec3b>(cen_y + cen_y_i, cen_x + cen_x_i));
+				//	}
+				//}
 				
 
 				//Rect box = getBoundingBox_d(dst_p[0], dst_p[1],
@@ -1200,21 +1266,22 @@ void LaneDetection::findPairs(vector<Pair2d> &pairs, vector<Pair2d> &pairs_in_im
 				
 			}
 			//cout << endl;
-			double g[3];
+
+			double g[3];//mean gray color in three rectangles
 			for (int g_n = 0; g_n < 3; g_n++)
 			{
 				g[g_n] = 0.114*mean_color[g_n][0] + 0.587*mean_color[g_n][1] + 0.299*mean_color[g_n][2];
 			}
-			bool color_matched = true;
-			for (int g_n = 0; g_n < 3; g_n++)
-			{
-				color_matched = color_matched &&
-					mean_color[0][g_n] > mean_color[1][g_n] + 10
-					&& mean_color[0][g_n] > mean_color[2][g_n] + 10;
-			}
+			bool color_matched = g[0] > g[1] + 10 && g[0] > g[2] + 10;
+			//for (int g_n = 0; g_n < 3; g_n++)
+			//{
+			//	color_matched = color_matched &&
+			//		mean_color[0][g_n] > mean_color[1][g_n] + 10
+			//		&& mean_color[0][g_n] > mean_color[2][g_n] + 10;
+			//}
 
-			color_matched = color_matched && abs(mean_color[0][0] - mean_color[0][1]) < 50
-				&& abs(mean_color[0][0] - mean_color[0][2]) < 50;
+			//color_matched = color_matched && abs(mean_color[0][0] - mean_color[0][1]) < 50
+			//	&& abs(mean_color[0][0] - mean_color[0][2]) < 50;
 
 			//bool color_matched = (g[0] > g[1] + 10) && (g[0] > g[2] + 10);
 			if (!color_matched)
@@ -1229,22 +1296,124 @@ void LaneDetection::findPairs(vector<Pair2d> &pairs, vector<Pair2d> &pairs_in_im
 				continue;
 			}
 
-			//some lanes are like (255, 255, 200)
-			//double dif_bg = mean_color[0][0] - mean_color[0][1];
-			//double dif_rg = mean_color[0][2] - mean_color[0][1];
-			//color_matched = (dif_bg * dif_bg + dif_rg * dif_rg < 400);
-			//if (!color_matched)
-			//{
-			//	continue;
-			//}
-
 			Pair2d pair2d(*p12, *seg, entire_v[0].p1, entire_v[0].p2, entire_v[1].p1, entire_v[1].p2);
+			Pair2d pair2d_img(*p12_img, *seg_img);
 			double mean_width = d1;
 			pair2d.setMeanWidth(mean_width);
-
-
-			
+			pair2d.setMeanColor(g[0]);
 			pair2d.computeLineModel();
+
+//			if (times > 0)
+			{
+				bool b_check_overlay = true;
+
+				//check overlap
+				for (int k = 0; k < n_segments; k++)
+				{
+					int index = pair_relation[i][k];
+					if (index < 0)
+						continue;
+
+					double y1 = pairs[index]._p12.p1.y;//p1.y < p2.y
+					double y2 = pairs[index]._p12.p2.y;
+					double mean_color = pairs[index].mean_color;
+					double mean_width = pairs[index].mean_width;
+
+					if (pair2d._p12.p1.y > y2 || pair2d._p12.p2.y < y1)
+						continue;
+
+					if (pair2d.mean_width / mean_width < 1.8 && pair2d.mean_width / mean_width > 0.56)
+						continue;
+
+					double arry[4] = { pair2d._p12.p1.y, pair2d._p12.p2.y, y1, y2 };
+					for (int i = 1, j = 0; i < 4; i++)
+					{
+						double temp = arry[i];
+						for (j = i - 1; j >= 0 && temp <= arry[j]; j--)
+						{
+							arry[j + 1] = arry[j];
+						}
+						arry[j + 1] = temp;
+					}
+
+					double overlap_y = arry[2] - arry[1];
+					if (overlap_y / pair2d._p12.getLength() < 0.2
+						&& overlap_y / (y2 - y1) < 0.2)
+						continue;
+
+					if (pair2d.mean_color > mean_color)
+					{
+						pairs[index] = pair2d;
+						pairs_in_image[index] = pair2d_img;
+						pair_relation[i][k] = -1;
+						pair_relation[k][i] = -1;
+						pair_relation[i][j] = index;
+						pair_relation[j][i] = index;
+					}
+					else
+					{
+						b_check_overlay = false;
+					}
+				}
+
+				for (int k = 0; k < n_segments; k++)
+				{
+					int index = pair_relation[j][k];
+					if (index < 0)
+						continue;
+
+					double y1 = pairs[index]._p12.p1.y;//p1.y < p2.y
+					double y2 = pairs[index]._p12.p2.y;
+					double mean_color = pairs[index].mean_color;
+					double mean_width = pairs[index].mean_width;
+
+					if (pair2d._p12.p1.y > y2 || pair2d._p12.p2.y < y1)
+						continue;
+
+					if (pair2d.mean_width / mean_width < 1.8 && pair2d.mean_width / mean_width > 0.56)
+						continue;
+
+					double arry[4] = { pair2d._p12.p1.y, pair2d._p12.p2.y, y1, y2 };
+					for (int i = 1, j = 0; i < 4; i++)
+					{
+						double temp = arry[i];
+						for (j = i - 1; j >= 0 && temp <= arry[j]; j--)
+						{
+							arry[j + 1] = arry[j];
+						}
+						arry[j + 1] = temp;
+					}
+
+					double overlap_y = arry[2] - arry[1];
+					if (overlap_y / pair2d._p12.getLength() < 0.2
+						&& overlap_y / (y2 - y1) < 0.2)
+						continue;
+
+					if (pair2d.mean_color > mean_color)
+					{
+						pairs[index] = pair2d;
+						pairs_in_image[index] = pair2d_img;
+						pair_relation[i][k] = -1;
+						pair_relation[k][i] = -1;
+						pair_relation[i][j] = index;
+						pair_relation[j][i] = index;
+					}
+					else
+					{
+						b_check_overlay = false;
+					}
+				}
+
+				if (!b_check_overlay)
+				{
+#ifdef DEBUG_FOUT
+					fout_2 << "!b_check_overlay  " << endl;
+					fout_2 << i << "," << j << "[" << p12_img->p1 << "," << p12_img->p2 << "] and [" << seg_img->p1 << "," << seg_img->p2 << endl;
+#endif
+					continue;
+				}
+
+			}
 
 
 			p12_img;
@@ -1330,12 +1499,25 @@ void LaneDetection::findPairs(vector<Pair2d> &pairs, vector<Pair2d> &pairs_in_im
 			//if (angle < 0) angle += CV_PI;
 			//slopes.push_back(angle);
 
+#ifdef DEBUG_FOUT
+			fout_2 << "pairs_in_image.push_back(pair2d_img) " << endl;
+			fout_2 << i << "," << j << "[" << p12_img->p1 << "," << p12_img->p2 << "] and [" << seg_img->p1 << "," << seg_img->p2 << endl;
+#endif
+			
 			pairs.push_back(pair2d);
-			pairs_in_image.push_back(Pair2d(*p12_img, *seg_img));
+			pairs_in_image.push_back(pair2d_img);
+
+			pair_relation[i][j] = pairs.size() - 1;
+			pair_relation[j][i] = pairs.size() - 1;
 			
 		}
 	}
 
+	for (int i = 0 ; i < n_segments; i++)
+	{
+		delete pair_relation[i];
+	}
+	delete pair_relation;
 
 	////mean shift to find slope center
 	//vector<Pair2d> _pairs_copy = pairs;
@@ -1375,24 +1557,42 @@ void LaneDetection::findPairs(vector<Pair2d> &pairs, vector<Pair2d> &pairs_in_im
 	//	pairs.push_back(_pairs_copy[i]);
 	//	pairs_in_image.push_back(_pairs_in_image_copy[i]);
 	//}
-
-#ifdef DEBUG_FOUT
-	imwrite("pairImage.png", pairImage);
-#endif
 }
 
+void LaneDetection::checkPairs(vector<Pair2d> &pairs, vector<Pair2d> &pairs_in_image)
+{
+	if (pairs.size() != pairs_in_image.size())
+	{
+		cout << "pairs.size() != pairs_in_image.size() !" << endl;
+		return;
+	}
 
-vector<Pair2d> LaneDetection::method3(const Mat &img, int winFlag, const Mat &maskRoad)
+	if (pairs.empty())
+	{
+		cout << "pairs.empty() !" << endl;
+		return;
+	}
+
+	for (int i = 0; i < pairs.size(); i++)
+	{
+		pairs[i].s1;
+	}
+	
+
+}
+
+vector< vector<Pair2d> > LaneDetection::method3(const Mat &img, int winFlag, const Mat &maskRoad)
 {
 #ifdef DEBUG_FOUT
 	fout_2.open("debug_fout.txt");
 #endif
 	vector<Pair2d> pairs;
 	vector<Pair2d> pairs_in_image;
+	vector< vector<Pair2d> > pairs_;
 	if (ipm == NULL)
 	{
 		cout << "ipm is null .. " << endl;
-		return pairs;
+		return pairs_;
 	}
 	
 	img.copyTo(rawImage);
@@ -1410,7 +1610,7 @@ vector<Pair2d> LaneDetection::method3(const Mat &img, int winFlag, const Mat &ma
 	if (!rawGrayImage.data)
 	{
 		cout << "processImage is empty. " << endl;
-		return pairs;
+		return pairs_;
 	}
 
 	resultLSD();
@@ -1426,9 +1626,13 @@ vector<Pair2d> LaneDetection::method3(const Mat &img, int winFlag, const Mat &ma
 	//ipm->getRxAndH(rx, h);
 	//cout << "1 "<< rx << "," << h << endl;
 	updateIPM2(pairs_in_image);
+	cout << "----------------------------------" << endl;
 	//ipm->getRxAndH(rx, h);
 	//cout << "2 "<<  rx << "," << h << endl;
-	findPairs(pairs, pairs_in_image, maskRoad);
+	findPairs(pairs, pairs_in_image, maskRoad, 2);
+
+
+	
 
 #ifdef DEBUG_drawImage
 	Mat updateIPM_img;
@@ -1449,40 +1653,78 @@ vector<Pair2d> LaneDetection::method3(const Mat &img, int winFlag, const Mat &ma
 	}
 	sprintf_s(winName, "pairImage %d", winFlag);
 	imshow(winName, pairImage);
+	//imwrite("pairImage.png", pairImage);
+
+
+
 
 	int scale = 10;
 	Mat ipm_image = Mat::zeros(scale*(z_max-z_min), scale*(x_max - x_min), CV_8UC3);
 
+	circle(ipm_image, scale * Point2d(0 - x_min, z_max - z_min), 10, Scalar(255, 255, 0));
 	for (int i = 0; i < pairs.size(); i++)
 	{
 		for (int s = 0; s < 2; s++)
 		{
-			const Segment2d *seg_img = (s == 0 ? &pairs[i].s1 : &pairs[i].s2);
-			double x = seg_img->p1.x, z = seg_img->p1.y;
+			const Segment2d *seg = (s == 0 ? &pairs[i].s1 : &pairs[i].s2);
+			double x = seg->p1.x, z = seg->p1.y;
 			Point2d p1(x - x_min, z_max - z);
-			x = seg_img->p2.x, z = seg_img->p2.y;
+			x = seg->p2.x, z = seg->p2.y;
 			Point2d p2(x - x_min, z_max - z);
 			line(ipm_image, scale * p1, scale * p2, Scalar(255, 0, 0));
 		}
 
-		Segment2d *seg_img = &pairs[i]._p12;
-		double x = seg_img->p1.x, z = seg_img->p1.y;
-		Point2d p1(x - x_min, z_max - z);
-		x = seg_img->p2.x, z = seg_img->p2.y;
-		Point2d p2(x - x_min, z_max - z);
-		line(ipm_image, scale * p1, scale * p2, Scalar(255, 255, 0));
+		//Segment2d *seg = &pairs[i]._p12;
+		//double x = seg->p1.x, z = seg->p1.y;
+		//Point2d p1(x - x_min, z_max - z);
+		//x = seg->p2.x, z = seg->p2.y;
+		//Point2d p2(x - x_min, z_max - z);
+		//line(ipm_image, scale * p1, scale * p2, Scalar(255, 255, 0));
 	}
+
+	//for (int i = 0; i < 1; i++)
+	//{
+	//	for (int s = 0; s < 2; s++)
+	//	{
+	//		const Segment2d *seg = (s == 0 ? &pairs[i].s1 : &pairs[i].s2);
+	//		double x = seg->p1.x, z = seg->p1.y;
+	//		Point2d p1(x - x_min, z_max - z);
+	//		x = seg->p2.x, z = seg->p2.y;
+	//		Point2d p2(x - x_min, z_max - z);
+	//		line(ipm_image, scale * p1, scale * p2, Scalar(255, 0, 255));
+	//	}
+
+	//	Segment2d *seg = &pairs[i]._p12;
+	//	double x = seg->p1.x, z = seg->p1.y;
+	//	Point2d p1(x - x_min, z_max - z);
+	//	x = seg->p2.x, z = seg->p2.y;
+	//	Point2d p2(x - x_min, z_max - z);
+	//	line(ipm_image, scale * p1, scale * p2, Scalar(255, 255, 255));
+
+	//	cout << "pairs[0].mean_width : " << pairs[0].mean_width << endl;
+	//	for (int i = 1; i < pairs.size(); i++)
+	//	{
+	//		cout << "dist_p2line((pairs[i]._p12.p1 + pairs[i]._p12.p2) / 2, pairs[0]._p12) : "
+	//			<< dist_p2line((pairs[i]._p12.p1 + pairs[i]._p12.p2) / 2, pairs[0]._p12) << endl;
+	//		
+	//	}
+
+	//}
 
 
 	sprintf_s(winName, "ipm_image %d", winFlag);
 	imshow(winName, ipm_image);
+	
 #endif
 
 
 #ifdef DEBUG_FOUT
 	fout_2.close();
 #endif
-	return pairs;
+	pairs_.push_back(pairs);
+	pairs_.push_back(pairs_in_image);
+	
+	return pairs_;
 }
 
 
@@ -1519,7 +1761,10 @@ vector<Pair2d> LaneDetection::method4(const Mat &rL, const Mat &disp, int winFla
 
 	resultLSD();
 
-	//Mat maskRoad;
+	Mat maskRoad;
+	roadExtraFromDisp(disp, maskRoad);
+
+	//
 	//segmentationRoad(maskRoad);
 
 	//imshow("maskRoad", maskRoad);
@@ -1639,3 +1884,201 @@ void LaneDetection::segmentationRoad(Mat &maskRoad)
 	}
 	
 }
+
+
+void drawRoad(const Mat &disp, double rho, double theta){
+	Mat drawDisp;
+	cvtColor(disp, drawDisp, CV_GRAY2BGR);
+
+	double a = -1 / tan(theta), b = rho / sin(theta);
+	for (int r = b + 0.5; r < disp.rows; r++)
+	{
+		Vec3b* ptr_row_drawDisp = drawDisp.ptr<Vec3b>(r);
+		const uchar* ptr_row_disp = disp.ptr<uchar>(r);
+
+
+		double x = (r - b) / a;
+		int x0 = x - 15, x1 = x + 15;
+		for (int c = 0; c < disp.cols; c++)
+		{
+			int val = ptr_row_disp[c];
+			if (val != 0 && val <= x1 && val >= x0)
+			{
+				ptr_row_drawDisp[c] = Vec3b(255, 0, 0);
+			}
+		}
+	}
+
+	imshow("road", drawDisp);
+}
+const int intervalMax = 100, intervalMin = 10, step_ = 16;
+inline int betterVote(int nup, int u, int ndown, int d)
+{
+	return (int)(max(2.0, (double)(u - d)*(intervalMax - ndown) / (nup - ndown)) + d);
+}
+int g_better_vote = -1;
+void LaneDetection::roadExtraFromDisp(const Mat &disp, Mat &maskRoad)
+{
+	double fx, fy, cv, cu;
+	ipm->getCameraParam(fx, fy, cu, cv);
+	
+	//v-disp
+	Mat vdisp = Mat::zeros(disp.rows, 256, CV_8UC1);
+	for (int _r = disp.rows / 2; _r < disp.rows; _r++)
+	{
+		const uchar* ptr_row_disp = disp.ptr<uchar>(_r);
+		uchar* ptr_row_vdisp = vdisp.ptr<uchar>(_r);
+
+		for (int _c = 0; _c < disp.cols; _c++)
+		{
+			if (ptr_row_disp[_c] < 5) continue;
+			if (ptr_row_vdisp[ptr_row_disp[_c]] < 255)
+				ptr_row_vdisp[ptr_row_disp[_c]]++;
+		}
+	}
+	Mat raw_vdisp;
+	vdisp.copyTo(raw_vdisp);
+	imshow("v-disp-raw", vdisp);
+
+	threshold(vdisp, vdisp, 0, 255, THRESH_OTSU);
+	vector<Vec2f> lines_0, lines_1;
+	imshow("v-disp-thre", vdisp);
+
+	if (g_better_vote < 0)
+	{
+		for (int i = 150; i > 15; i -= 10)
+		{
+			lines_0 = lines_1;
+			HoughLines(vdisp, lines_1, 1, 0.01 * CV_PI / 180, i, 0, 0, 120 * CV_PI / 180, 150 * CV_PI / 180);
+			int numOfLines = lines_1.size();
+			if (numOfLines > intervalMax)
+			{
+				g_better_vote = i + 10;
+				if (lines_0.size() == 0)
+				{
+					g_better_vote = i;
+				}
+				break;
+			}
+		}
+	}
+
+	int vote = g_better_vote;
+	int bi_down = max(0, g_better_vote - step_), bi_up = g_better_vote + step_;
+	int numOfLines_down = -1, numOfLines_up = -1;
+
+	bool DownUpKnown = false;
+	for (int times_i = 0; times_i < 5; times_i++)
+	{
+
+		HoughLines(vdisp, lines_1, 1, 0.01 * CV_PI / 180, vote, 0, 0, 120 * CV_PI / 180, 150 * CV_PI / 180);
+
+		//cout << "-----------------------in loop------------------------" << endl;
+		//cout << DownUpKnown << endl;
+		//cout << "numOfLines_down: " << numOfLines_down << "," << "numOfLines_up : " << numOfLines_up << endl;
+		//cout << "down : " << bi_down << " : up " << bi_up << endl << " vote:" << vote << endl;
+		//cout << "lines_1.size() : " << lines_1.size() << endl;
+		//cout << "-----------------------end in loop--------------------" << endl;
+
+		int numOfLines = lines_1.size();
+		if (numOfLines <= intervalMax && numOfLines >= intervalMin)//perfect case
+		{
+			break;
+		}
+		else
+		{
+			if (DownUpKnown)
+			{
+				if (numOfLines < intervalMin)
+				{
+					bi_up = vote;
+					numOfLines_up = numOfLines;
+					vote = betterVote(numOfLines_up, bi_up, numOfLines_down, bi_down);
+				}
+				else
+				{
+					bi_down = vote;
+					numOfLines_down = numOfLines;
+					vote = betterVote(numOfLines_up, bi_up, numOfLines_down, bi_down);
+				}
+			}
+			else
+			{
+				if (numOfLines < intervalMin)
+				{
+					int n = numOfLines;
+					while (n < intervalMin)
+					{
+						vote = bi_down;
+						if (vote == 0)
+							break;
+						bi_down = max(0, vote - step_);
+						numOfLines_up = n;
+						HoughLines(vdisp, lines_1, 1, 0.01 * CV_PI / 180, vote, 0, 0, 120 * CV_PI / 180, 150 * CV_PI / 180);
+						n = lines_1.size();
+					}
+					if (n <= intervalMax)
+						break;
+
+					bi_down = vote;
+					numOfLines_down = n;
+					bi_up = vote + step_;
+					vote = betterVote(numOfLines_up, bi_up, numOfLines_down, bi_down);
+				}
+				else
+				{
+					int n = numOfLines;
+					while (n > intervalMax)
+					{
+						vote = bi_up;
+						bi_up = vote + step_;
+						numOfLines_down = n;
+						HoughLines(vdisp, lines_1, 1, 0.01 * CV_PI / 180, vote, 0, 0, 120 * CV_PI / 180, 150 * CV_PI / 180);
+						n = lines_1.size();
+					}
+					if (n >= intervalMin)
+						break;
+
+					bi_up = vote;
+					numOfLines_up = n;
+					bi_down = max(0, vote - step_);
+					vote = betterVote(numOfLines_up, bi_up, numOfLines_down, bi_down);
+				}
+				DownUpKnown = true;
+			}
+		}
+	}
+
+	vector<Vec2f> lines = lines_1;
+	g_better_vote = vote;
+	if (lines.size() == 0)
+	{
+		cout << "--------------------------" << endl;
+		cout << "error! no lines detected! " << endl;
+		cout << "--------------------------" << endl;
+	}
+
+	cvtColor(vdisp, vdisp, CV_GRAY2BGR);
+	double vanishing_point_y = 0;
+	double mean_rho = 0, mean_theta = 0;// y = -(cos(theta)/sin(theta))x + rho / sin(theta).
+	for (int i = 0; i < lines.size(); i++)
+	{
+		mean_rho += lines[i][0], mean_theta += lines[i][1];
+
+		line(vdisp, Point(vdisp.cols, lines[i][0] / sin(lines[i][1]) - (vdisp.cols - 1)*cos(lines[i][1]) / sin(lines[i][1])),
+			Point(0, lines[i][0] / sin(lines[i][1])), Scalar(255, 128, 0));
+	}
+	mean_rho /= lines.size();
+	mean_theta /= lines.size();
+	vanishing_point_y = cv - mean_rho / sin(mean_theta);
+
+	double theta = atan2(vanishing_point_y, fx);
+
+	imshow("v-disp", vdisp);
+	//imwrite("2.png", vdisp);
+	//waitKey();
+
+	drawRoad(disp, mean_rho, mean_theta);
+}
+
+

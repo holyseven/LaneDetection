@@ -117,7 +117,7 @@ public:
 	string baseDir;
 
 	KITTI_Data_Reader();
-	KITTI_Data_Reader(string _baseDir);
+	KITTI_Data_Reader(string _baseDir, string _formatImage = ".png");
 
 	bool generateNextDataFileName(int _dataIndex = -1);
 
@@ -139,6 +139,7 @@ private:
 	string velodyneDir;//laser data dir
 	int dataIndex;
 	int maxIndex;
+	string formatImage;
 };
 
 

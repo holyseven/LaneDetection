@@ -13,7 +13,7 @@ using namespace std;
 
 void parse(string &DataSetFolderName, string &calibFileName, int &rectified,
 	int &frameInterval, float &h, int &methodeDisparity, int &noDisparity,
-	int &elasSetting, int &showTimeConsuming, float &pitch)
+	int &elasSetting, int &showTimeConsuming, float &pitch, string &formatImage)
 {
 	ifstream in("config.txt");
 	if (!in.is_open())
@@ -31,17 +31,21 @@ void parse(string &DataSetFolderName, string &calibFileName, int &rectified,
 	in >> elasSetting;
 	in >> showTimeConsuming;
 	in >> pitch;
+	in >> formatImage;
 	in.close();
 }
 
 //with stereo
-int main(){
+int main2(){
 	//default values
 	string DataSetFolderName;
 	DataSetFolderName = "C:\\201506-201511MFE\\KITTI_data\\2011_09_26\\2011_09_26_drive_0029_sync";
 
 	string calibFileName;
 	calibFileName = "C:\\201506-201511MFE\\KITTI_data\\2011_09_26\\calib_cam_to_cam.txt";
+
+	string formatImage;
+	formatImage = ".png";
 
 	//default settings:
 	int rectified = 1; // 1 -- have already rectified; 0 -- need rectify
@@ -55,11 +59,11 @@ int main(){
 
 	//read config.txt to settings:
 	parse(DataSetFolderName, calibFileName, rectified, frameInterval, h,
-		methodeDisparity, noDisparity, elasSetting, showTimeConsuming, pitch);
+		methodeDisparity, noDisparity, elasSetting, showTimeConsuming, pitch, formatImage);
 	cout << "reading config.txt" << endl;
 
 
-	KITTI_Data_Reader reader(DataSetFolderName);
+	KITTI_Data_Reader reader(DataSetFolderName, formatImage);
 	cout << "Image number in this dir : " << reader.getMaxIndex() << endl;
 
 	RectifyStereo rectifyStereo(calibFileName, rectified);
@@ -85,11 +89,11 @@ int main(){
 	Ptr<StereoSGBM> sgbm = StereoSGBM::create(0, 256, 11);//sgbm for computing dm
 	Ptr<StereoBM> bm = StereoBM::create(0, 15);//sgbm for computing dm
 
-	int frameNum = 0;
+
 	Mat ipmImage;
 	int64 t0, t1;
 
-	reader.jumpToIndex(100);
+	reader.jumpToIndex(0);
 
 	Mat _ = imread(reader.curImageFileName[0]);
 	LaneDetection *lsd_ = new LaneDetection(_);
@@ -126,9 +130,16 @@ int main(){
 			cout << "Reading images and rectifying images : " << (t1 - t0) / getTickFrequency() * 1000 << " ms. " << endl;
 		}
 		Mat disp;
-		procELAS.computeDisparity(rL, rR, disp);
+		if (methodeDisparity == 0)
+			procELAS.computeDisparity(rL, rR, disp);
+		else if (methodeDisparity == 1)
+		{
+			sgbm->compute(rL, rR, disp);
+			disp.convertTo(disp, CV_8U, 1.0 / 8);
+		}
+			
 		//lsd_->method3(rL);
-		lsd_->method4(rL, rR);
+		lsd_->method4(rL, disp);
 
 		if (showTimeConsuming)
 		{
@@ -136,8 +147,8 @@ int main(){
 			cout << "LaneDetection : " << (t1 - t0) / getTickFrequency() * 1000 << " ms. " << endl;
 		}
 
-		imshow("maskRoad", disp);
-		if (waitKey(10) > 0)
+		imshow("disparity map", disp);
+		//if (waitKey(10) > 0)
 			waitKey();
 	}
 	cout << "-------------------end------------------ " << endl;
@@ -147,7 +158,7 @@ int main(){
 
 
 //mono camera
-int main2() {
+int main() {
 	//default values
 	string DataSetFolderName;
 	DataSetFolderName = "C:\\201506-201511MFE\\KITTI_data\\2011_09_26\\2011_09_26_drive_0029_sync";
@@ -164,14 +175,15 @@ int main2() {
 	int elasSetting = Elas::ROBOTICS;
 	int showTimeConsuming = 0;
 	float pitch = 0;
+	string formatImage = ".png";
 
 	//read config.txt to settings:
 	parse(DataSetFolderName, calibFileName, rectified, frameInterval, h,
-		methodeDisparity, noDisparity, elasSetting, showTimeConsuming, pitch);
+		methodeDisparity, noDisparity, elasSetting, showTimeConsuming, pitch, formatImage);
 	cout << "reading config.txt" << endl;
 
 
-	KITTI_Data_Reader reader(DataSetFolderName);
+	KITTI_Data_Reader reader(DataSetFolderName, formatImage);
 	cout << "Image number in this dir : " << reader.getMaxIndex() << endl;
 
 	RectifyStereo rectifyStereo(calibFileName, rectified);
@@ -191,7 +203,7 @@ int main2() {
 	Mat ipmImage;
 	int64 t0, t1;
 
-	reader.jumpToIndex(100);
+	reader.jumpToIndex(0);
 
 	Mat _ = imread(reader.curImageFileName[0]);
 	LaneDetection *lsd_ = new LaneDetection(_);
@@ -203,8 +215,10 @@ int main2() {
 	//LaneDetection *lsd_r = new LaneDetection(_);
 	//lsd_r->init(0, &ipm_r);
 
+	int frame_i = 0;
 	while (reader.generateNextDataFileName())
 	{
+		cout << "frame----------------------" << frame_i++ << endl;
 		if (showTimeConsuming)
 			t0 = getTickCount();
 		string left_img_file_name = reader.curImageFileName[0];
@@ -244,7 +258,7 @@ int main2() {
 		}
 
 		//imshow("maskRoad", maskRoad);
-		if (waitKey(10) > 0)
+		//if (waitKey(10) > 0)
 			waitKey();
 	}
 	cout << "-------------------end------------------ " << endl;

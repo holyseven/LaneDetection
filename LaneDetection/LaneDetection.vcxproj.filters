@@ -16,9 +16,6 @@
     <Filter Include="Source Files\ELAS_VisualOdometry">
       <UniqueIdentifier>{97e1bc81-ec72-4efa-88b5-f7e7e8171957}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\IPMImage">
-      <UniqueIdentifier>{33edb01b-8144-4c2d-9fd7-481c3e8afa33}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\KITTI_DATA_READER">
       <UniqueIdentifier>{5631f483-8792-4c47-a2cd-0497aa5b5f3f}</UniqueIdentifier>
     </Filter>
@@ -71,15 +68,6 @@
     </ClCompile>
     <ClCompile Include="src\ELAS_VisualOdometry\viso_stereo.cpp">
       <Filter>Source Files\ELAS_VisualOdometry</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IPMImage\GPSDataProcess.cpp">
-      <Filter>Source Files\IPMImage</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IPMImage\InversePerspectiveMapping.cpp">
-      <Filter>Source Files\IPMImage</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IPMImage\IPMImage.cpp">
-      <Filter>Source Files\IPMImage</Filter>
     </ClCompile>
     <ClCompile Include="src\KITTI_Data_Reader\KITTI_Data_Reader.cpp">
       <Filter>Source Files\KITTI_DATA_READER</Filter>
@@ -143,12 +131,6 @@
     <ClInclude Include="src\ELAS_VisualOdometry\viso_stereo.h">
       <Filter>Source Files\ELAS_VisualOdometry</Filter>
     </ClInclude>
-    <ClInclude Include="src\IPMImage\InversePerspectiveMapping.h">
-      <Filter>Source Files\IPMImage</Filter>
-    </ClInclude>
-    <ClInclude Include="src\IPMImage\IPMImage.h">
-      <Filter>Source Files\IPMImage</Filter>
-    </ClInclude>
     <ClInclude Include="src\KITTI_Data_Reader\KITTI_Data_Reader.h">
       <Filter>Source Files\KITTI_DATA_READER</Filter>
     </ClInclude>
@@ -163,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="src\LaneDetector\EKF.h">
       <Filter>Source Files\LaneDetector</Filter>
+    </ClInclude>
+    <ClInclude Include="globalVar.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
